@@ -1,16 +1,16 @@
+from potassium import Potassium, Request, Response
 from transformers import AutoTokenizer, AutoModelForCausalLM
 import torch
 
+app = Potassium("my_app")
 
-# Init is ran on server startup
-# Load your model to GPU as a global variable here using the variable name "model"
+
+# @app.init runs at startup, and initializes the app's context
+@app.init
 def init():
-    global model
-    global tokenizer
-
+    device = 0 if torch.cuda.is_available() else -1
     MODEL_NAME = "databricks/dolly-v2-12b"
 
-    device = 0 if torch.cuda.is_available() else -1
     tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
     model = AutoModelForCausalLM.from_pretrained(
         MODEL_NAME,
@@ -19,22 +19,25 @@ def init():
         device_map="auto",
     )
 
+    context = {"model": model, "tokenizer": tokenizer}
 
-# Inference is ran for every server call
-# Reference your preloaded global model variable here.
-def inference(model_inputs: dict) -> dict:
-    global model
-    global tokenizer
+    return context
 
-    # Parse out your arguments
-    prompt = model_inputs.get("prompt", None)
-    if prompt == None:
-        return {"message": "No prompt provided"}
+
+# @app.handler is an http post handler running for every call
+@app.handler()
+def handler(context: dict, request: Request) -> Response:
+    prompt = request.json.get("prompt")
+    model = context.get("model")
+    tokenizer = context.get("tokenizer")
 
     # Run the model
     input_ids = tokenizer(prompt, return_tensors="pt").input_ids.to("cuda")
     generated_ids = model.generate(input_ids)
     result = tokenizer.decode(generated_ids[0], skip_special_tokens=True)
 
-    # Return the results as a dictionary
-    return result
+    return Response(json={"outputs": result}, status=200)
+
+
+if __name__ == "__main__":
+    app.serve()
