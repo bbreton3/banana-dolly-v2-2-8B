@@ -1,5 +1,4 @@
 potassium
-sanic
-websockets==10.0
+sanic==22.6.2
 transformers
 accelerate
