@@ -1,11 +1,23 @@
 {
-    "name": "Dolly 2.0",
+    "name": "Dolly 2.0 8B",
     "category": "Natural Language",
     "example_input": {
-        "prompt": "Tell me a story about a cat"
+        "prompt": "Tell me a story about a cat",
+        "do_sample": true,
+        "max_new_tokens": 256,
+        "top_p": 0.92,
+        "top_k": 0
     },
     "example_output": {
-        "outputs": "Once upon a time.."
+        "output": "Once upon a time..",
+        "prompt": "Tell me a story about a cat",
+        "do_sample": true,
+        "max_new_tokens": 256,
+        "top_p": 0.92,
+        "top_k": 0,
+        "load_time": 0.1,
+        "generation_time": 0.5,
+        "inference_time": 0.6
     },
     "version": "1"
 }
