@@ -37,7 +37,7 @@ def handler(context: dict, request: Request) -> Response:
     # Run the model
     result = pipeline(prompt)
 
-    return Response(json={"outputs": result}, status=200)
+    return Response(json={"output": result}, status=200)
 
 
 if __name__ == "__main__":
