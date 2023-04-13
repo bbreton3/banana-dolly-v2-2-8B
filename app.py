@@ -15,7 +15,7 @@ def init():
     MODEL_NAME = "databricks/dolly-v2-2-8b"
     
     tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME, padding_side="left")
-    auto_model = AutoModelForCausalLM.from_pretrained(
+    model = AutoModelForCausalLM.from_pretrained(
         MODEL_NAME,
         torch_dtype=torch.bfloat16,
         device_map="auto",
