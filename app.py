@@ -9,8 +9,8 @@ app = Potassium("my_app")
 @app.init
 def init():
     device = 0 if torch.cuda.is_available() else -1
-    MODEL_NAME = "databricks/dolly-v2-12b"
-
+    MODEL_NAME = "databricks/dolly-v2-2-8b"
+    
     tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
     model = AutoModelForCausalLM.from_pretrained(
         MODEL_NAME,
